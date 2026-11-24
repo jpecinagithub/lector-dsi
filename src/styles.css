@@ -172,3 +172,7 @@ mark.search-hit { background:#fb923c; }
   .topbar, .reader-tools, .side, .player, .mark-bar { display:none !important; }
   .reader-scroll { overflow:visible; }
 }
+.track-author { color:var(--muted); font-size:14.5px; margin:2px 0 8px !important; }
+.track-link { background:none; border:none; padding:0; color:var(--accent2); font-weight:700; font-size:14px; }
+.track-link:hover { text-decoration:underline; }
+.track-card { align-items:center; }

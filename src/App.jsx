@@ -96,7 +96,8 @@ function Quiz({ quizKey, questions, title, store, setStore, onDone }) {
 export default function App() {
   const [store, setStore] = useStore()
   const urlCap = (() => { try { const n = parseInt(new URLSearchParams(window.location.search).get('cap'), 10); return n >= 1 && n <= 10 ? n : null } catch { return null } })()
-  const [view, setView] = useState(urlCap ? 'read' : (store.lastChapter ? 'read' : 'home')) // home | read | music | my
+  const urlVista = (() => { try { const v = new URLSearchParams(window.location.search).get('vista'); return { musica: 'music', leer: 'read', estudio: 'my', inicio: 'home' }[v] || null } catch { return null } })()
+  const [view, setView] = useState(urlVista || (urlCap ? 'read' : (store.lastChapter ? 'read' : 'home'))) // home | read | music | my
   const [chapterId, setChapterId] = useState(urlCap || store.lastChapter || 1)
   const [mode, setMode] = useState('text') // text | quiz dentro del lector
   const [panel, setPanel] = useState(null) // index | notes | marks | settings
@@ -392,13 +393,8 @@ export default function App() {
                 <button className="track-play" onClick={() => playTrack(i)}>{trackIdx === i && playing ? '⏸' : '▶'}</button>
                 <div className="track-body">
                   <h3>{t.title}</h3>
-                  <p className="track-work">{t.work}</p>
-                  <p><strong>{t.composer}</strong> ({t.years}) · {t.country}</p>
-                  <p className="track-tags"><span>{t.era}</span><span>{t.style}</span><span>{t.year}</span></p>
-                  <p className="track-desc">{t.desc}</p>
-                  <p className="track-mood">🎧 {t.mood}</p>
-                  <p className="track-meta">Intérprete: {t.performer} · {t.license}</p>
-                  <button className="btn small" onClick={() => setTrackInfo(t)}>Ver ficha completa</button>
+                  <p className="track-author">{t.composer}</p>
+                  <button className="track-link" onClick={() => setTrackInfo(t)}>Ver detalle →</button>
                 </div>
               </article>
             ))}
