@@ -107,7 +107,8 @@ export default function App() {
   const [trackInfo, setTrackInfo] = useState(null)
   const readerRef = useRef(null)
 
-  const settings = { fontSize: 19, lineHeight: 1.75, theme: 'atlas', font: 'sans', ...(store.settings || {}) }
+  const urlTema = (() => { try { const t = new URLSearchParams(window.location.search).get('tema'); return t === 'dia' ? 'light' : t === 'noche' ? 'atlas' : t === 'sepia' ? 'sepia' : null } catch { return null } })()
+  const settings = { fontSize: 19, lineHeight: 1.75, theme: 'atlas', font: 'sans', ...(store.settings || {}), ...(urlTema && !store.settings?.theme ? { theme: urlTema } : {}) }
   const setSettings = (patch) => setStore(p => ({ ...p, settings: { ...settings, ...patch } }))
   const chapter = book.chapters.find(c => c.id === chapterId)
   const highlights = store.highlights || {}
@@ -217,6 +218,9 @@ export default function App() {
           <button className={view === 'music' ? 'on' : ''} onClick={() => setView('music')}>🎵 Música</button>
           <button className={view === 'my' ? 'on' : ''} onClick={() => setView('my')}>Mi estudio</button>
         </nav>
+        <button className="btn small theme-toggle" onClick={() => setSettings({ theme: settings.theme === 'light' ? 'atlas' : 'light' })} title="Cambiar entre modo día y modo noche">
+          {settings.theme === 'light' ? '🌙 Noche' : '☀️ Día'}
+        </button>
         <div className="top-progress" title="Capítulos leídos">
           <div className="bar"><div style={{ width: progressPct + '%' }} /></div>
           <span>{progressPct}%</span>
@@ -304,7 +308,7 @@ export default function App() {
                 <label>Interlineado <input type="range" min="1.4" max="2.2" step="0.05" value={settings.lineHeight} onChange={e => setSettings({ lineHeight: +e.target.value })} /></label>
                 <label>Tema
                   <select value={settings.theme} onChange={e => setSettings({ theme: e.target.value })}>
-                    <option value="atlas">Atlas (oscuro)</option><option value="light">Claro</option><option value="sepia">Sepia</option>
+                    <option value="atlas">🌙 Noche (Atlas)</option><option value="light">☀️ Día (claro)</option><option value="sepia">Sepia</option>
                   </select>
                 </label>
                 <label>Fuente
