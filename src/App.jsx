@@ -95,8 +95,9 @@ function Quiz({ quizKey, questions, title, store, setStore, onDone }) {
 
 export default function App() {
   const [store, setStore] = useStore()
-  const [view, setView] = useState(store.lastChapter ? 'read' : 'home') // home | read | music | my
-  const [chapterId, setChapterId] = useState(store.lastChapter || 1)
+  const urlCap = (() => { try { const n = parseInt(new URLSearchParams(window.location.search).get('cap'), 10); return n >= 1 && n <= 10 ? n : null } catch { return null } })()
+  const [view, setView] = useState(urlCap ? 'read' : (store.lastChapter ? 'read' : 'home')) // home | read | music | my
+  const [chapterId, setChapterId] = useState(urlCap || store.lastChapter || 1)
   const [mode, setMode] = useState('text') // text | quiz dentro del lector
   const [panel, setPanel] = useState(null) // index | notes | marks | settings
   const [search, setSearch] = useState('')
@@ -106,7 +107,7 @@ export default function App() {
   const [trackInfo, setTrackInfo] = useState(null)
   const readerRef = useRef(null)
 
-  const settings = { fontSize: 19, lineHeight: 1.75, theme: 'atlas', font: 'serif', ...(store.settings || {}) }
+  const settings = { fontSize: 19, lineHeight: 1.75, theme: 'atlas', font: 'sans', ...(store.settings || {}) }
   const setSettings = (patch) => setStore(p => ({ ...p, settings: { ...settings, ...patch } }))
   const chapter = book.chapters.find(c => c.id === chapterId)
   const highlights = store.highlights || {}
@@ -308,7 +309,7 @@ export default function App() {
                 </label>
                 <label>Fuente
                   <select value={settings.font} onChange={e => setSettings({ font: e.target.value })}>
-                    <option value="serif">Serif (libro)</option><option value="sans">Sans (pantalla)</option>
+                    <option value="sans">Sans limpia (estilo Atlas)</option><option value="serif">Serif clásica</option>
                   </select>
                 </label>
               </div>
@@ -344,7 +345,7 @@ export default function App() {
                   <p className="ch-author">{chapter.author} · {chapter.words.toLocaleString('es-ES')} palabras · ~{chapter.minutes} min de lectura</p>
                   {chapter.sections.map((s, si) => (
                     <section key={si}>
-                      {s.heading && <h2 className="sec-title">{s.heading}</h2>}
+                      {s.heading && !(si === 0 && s.heading.replace(/\s+\d+$/,'').trim().toLowerCase().startsWith(chapter.title.slice(0, 40).toLowerCase().replace(/\s+\d+$/,''))) && <h2 className="sec-title">{s.heading}</h2>}
                       {s.paragraphs.map((p, pi) => <p key={pi}><Highlighted text={p} marks={highlights[chapterId]} search={searchResults ? search : ''} /></p>)}
                     </section>
                   ))}
