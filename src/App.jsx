@@ -106,7 +106,7 @@ export default function App() {
   const [trackInfo, setTrackInfo] = useState(null)
   const readerRef = useRef(null)
 
-  const settings = { fontSize: 19, lineHeight: 1.75, theme: 'light', font: 'serif', ...(store.settings || {}) }
+  const settings = { fontSize: 19, lineHeight: 1.75, theme: 'atlas', font: 'serif', ...(store.settings || {}) }
   const setSettings = (patch) => setStore(p => ({ ...p, settings: { ...settings, ...patch } }))
   const chapter = book.chapters.find(c => c.id === chapterId)
   const highlights = store.highlights || {}
@@ -303,7 +303,7 @@ export default function App() {
                 <label>Interlineado <input type="range" min="1.4" max="2.2" step="0.05" value={settings.lineHeight} onChange={e => setSettings({ lineHeight: +e.target.value })} /></label>
                 <label>Tema
                   <select value={settings.theme} onChange={e => setSettings({ theme: e.target.value })}>
-                    <option value="light">Claro</option><option value="sepia">Sepia</option><option value="dark">Oscuro</option>
+                    <option value="atlas">Atlas (oscuro)</option><option value="light">Claro</option><option value="sepia">Sepia</option>
                   </select>
                 </label>
                 <label>Fuente
