@@ -1,0 +1,7 @@
+{
+  "name": "Lector DSI — Pobreza, riqueza y doctrina social de la Iglesia",
+  "short_name": "Lector DSI",
+  "start_url": "/", "display": "standalone",
+  "background_color": "#faf7f2", "theme_color": "#7a1f1f",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
